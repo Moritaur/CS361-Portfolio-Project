@@ -75,14 +75,42 @@ def edit_destination(destination_list):
                     'pictures (3), or area map (4)?\n')
     if to_edit not in ['0', '1', '2', '3', '4', 'destination name', 'description', 'date', 'pictures',
                        'area map']:
-        print('There is no detail by that name to edit.')
+        print('There is no detail by that name to edit.\n')
+        return 1
 
     # Edit destination name.
-    elif to_edit == 0 or to_edit == 'destination name':
+    elif to_edit == '0' or to_edit == 'destination name':
         print('The current destination name is: ' + target.get_destination_name())
         new_name = input('Enter new destination name: ')
         target.set_destination_name(new_name)
-        print('The destination name as been changed to: ' + new_name)
+        print('The destination name has been changed to: ' + new_name)
+
+    # Edit description.
+    elif to_edit == '1' or to_edit == 'description':
+        print('The current description is: ' + target.get_description())
+        new_desc = input('Enter new description: ')
+        target.set_description(new_desc)
+        print('The description has been changed to: ' + new_desc)
+
+    # Edit date.
+    elif to_edit == '2' or to_edit == 'date':
+        print('The current date listed is: ' + target.get_date())
+        new_date = input('Enter new date: ')
+        target.set_date(new_date)
+        print('The date has been changed to: ' + new_date)
+
+    # Edit pictures.
+    elif to_edit == '3' or to_edit == 'pictures':
+        print('Sorry, this feature is not implemented yet')
+
+    # Edit area map.
+    elif to_edit == '4' or to_edit == 'area map':
+        print('The current area map is: ' + target.get_area_map())
+        new_map = input('Enter new area map location: ')
+        target.set_area_map(new_map)
+        print('The associated area map has been changed to: ' + new_map)
+
+    return 0
 
 
 def main():
@@ -136,7 +164,10 @@ def main():
                 print('Please try again, when prompted for a list to edit input 0 to edit a prior destination, or 1'
                       ' to edit a future destination.')
                 return
-            edit_destination(list_to_edit)
+            edited = '1'
+            while edited == '1':
+                edit_destination(list_to_edit)
+                edited = input('Enter 0 to stop editing or 1 to edit more: ')
 
         elif task == '4':
             # User wants to view all stored destinations.
