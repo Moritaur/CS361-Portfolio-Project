@@ -31,9 +31,13 @@ class PriorDestination:
         self._destinations[self._destination_count] = destination
         self.increment_dc()
 
-    def remove_destination(self):
+    def remove_destination(self, destination):
         """Select a destination object from the list and remove it from the list."""
-        self.decrement_dc()
+        for key in self._destinations:
+            if self._destinations[key].get_destination_name() == destination:
+                self._destinations.pop(key)
+                self.decrement_dc()
+                return destination
 
     def view_destinations(self):
         """List all the destinations in this list."""

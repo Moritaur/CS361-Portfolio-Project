@@ -44,8 +44,7 @@ def view_destinations(prior_destinations, future_destinations):
     for i in prior_destinations:
         print(prior_destinations[i].get_destination_name())
         i += 1
-    time.sleep(1)
-    print('\n', '\n', '------------------------------------------------------------', '\n', '\n')
+    print('\n', '------------------------------------------------------------' '\n')
     print('Your saved future destinations are:\n')
     future_destinations = future_destinations.get_destinations()
     for i in future_destinations:
@@ -54,7 +53,6 @@ def view_destinations(prior_destinations, future_destinations):
     return
 
 
-# TODO: Fix edit_destination method.
 def edit_destination(destination_list):
     """Prompt user to determine what attribute they want to edit, then allow them to edit that attribute in a given
     destination"""
@@ -109,8 +107,28 @@ def edit_destination(destination_list):
         new_map = input('Enter new area map location: ')
         target.set_area_map(new_map)
         print('The associated area map has been changed to: ' + new_map)
-
     return 0
+
+
+def delete_destination(prior_destinations_list, future_destinations_list):
+    """This function will remove the specified destination from the chose list."""
+    view = input('If you need to view the available destinations enter 0, otherwise press enter: ')
+    if view == '0':
+        view_destinations(prior_destinations_list, future_destinations_list)
+    list_to_delete = input('Enter 0 to remove a prior destination or 1 to remove a future destination, '
+                           'any other key will stop deletion. ')
+    del_name = ''
+    list_name = 'Nothing'
+    if list_to_delete == '0':
+        del_name = prior_destinations_list.remove_destination(input('Enter prior destination to delete: '))
+        list_name = 'prior destinations.'
+    elif list_to_delete == '1':
+        del_name = future_destinations_list.remove_destination(input('Enter future destination to delete: '))
+        list_name = "future destinations."
+    if del_name != '':
+        print(del_name + ' has been deleted from your ' + list_name)
+    else:
+        print(list_name + ' has been deleted.')
 
 
 def main():
@@ -127,8 +145,9 @@ def main():
 
         if task == 'help' or task == 'h' or task == 'Help' or task == 'HELP':
             # Explain options to user.
-            print('Enter 0 to quit, 1 to add a previously visited destination and 2 to add a future destination. '
-                  'Enter 3 to edit an already existing destination, and 4 to view current destinations.')
+            print('Enter 0 to quit, 1 to add a previously visited destination and 2 to add a future destination.\n'
+                  'Enter 3 to edit an already existing destination, 4 to view current destinations, and 5 to delete a'
+                  'destination.')
 
         elif task == '0':
             # User wants to exit program.
@@ -172,6 +191,9 @@ def main():
         elif task == '4':
             # User wants to view all stored destinations.
             view_destinations(prior_destinations_list, future_destinations_list)
+
+        elif task == '5':
+            delete_destination(prior_destinations_list, future_destinations_list)
 
         else:
             print('I am sorry, but there is no function for that button. Please enter "help" or "h" to see options.')
