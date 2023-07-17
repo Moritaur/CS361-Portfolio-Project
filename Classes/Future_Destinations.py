@@ -49,3 +49,4 @@ class FutureDestination:
     def export_to_csv(self, file_name):
         """Export this list of destinations to a csv file."""
         pass
+

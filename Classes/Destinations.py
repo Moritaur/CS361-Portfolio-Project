@@ -78,3 +78,4 @@ class Destination:
     def delete(self):
         """This class will delete the destination object."""
         pass
+
