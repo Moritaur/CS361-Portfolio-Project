@@ -7,6 +7,7 @@
 
 import Classes
 import time
+import requests
 
 
 def add_to_prior_destinations():
@@ -131,10 +132,55 @@ def delete_destination(prior_destinations_list, future_destinations_list):
         print(list_name + ' has been deleted.')
 
 
+def access_microservice():
+    """ This function will access my partner's microservice (runs in a different process) and send a request to the
+    /destinations route to return a list of interests in the area within the given radius. Below lists the way to send
+    a request to the route:
+    location (str):
+        Location to get destinations for. Can be specified via city and/or state and/or country.
+        Examples: "Santa Clara" or "Santa Clara, CA" or "California" or "United States".
+    radius (int), default 10:
+        The radius (in miles) within to filter destinations for the given location.
+    type (list), default is all:
+        The type of destinations to return, separated by commas and NO spaces.
+        Can choose between accommodations, amusements, adult, cultural, natural,
+        interesting_places, and tourist_facilities.
+        """
+    comma = "%2C"
+    space = "%20"
+    location = input("Accessing search feature, please enter the location name: ")
+    radius = input("How far around the area would you like to search? ")
+    parameters = input("You can search for one, or many of the following. Please enter which you would like to search "
+                       "for separated by spaces.\n "
+                       "accommodations, amusements, adult, interesting_places, tourist_facilities: ")
+    location = location.replace(" ", space)
+    location = location.replace(",", comma)
+    parameters = parameters.replace(" ", comma)
+
+    url = "http://127.0.0.1:3000/destinations/?location=" + location + "&type=" + parameters + "&radius=" + radius
+    response = requests.get(url)
+    data = response.json()
+    destinations = [destination["name"] for destination in data]
+    for d in destinations:
+        print(d)
+    search_for_info = input("If you would like to search for further information enter the destination name.\n"
+                            "Otherwise press enter: ")
+    if search_for_info != "":
+        for destination in data:
+            if destination["name"].lower() == search_for_info.lower():
+                url = "http://127.0.0.1:3000/destination/" + destination["id"]
+                response = requests.get(url)
+                data = response.json()
+                print(data)
+                return
+        print("No destination matched that name")
+    return
+
 def main():
     """Main function, keeps programming running, watched for input, manages other classes, etc."""
 
     # Initialize list for prior and future destinations.
+    destinations = []
     prior_destinations_list = Classes.Prior_Destinations.PriorDestination()
     future_destinations_list = Classes.Future_Destinations.FutureDestination()
     print('For options, please enter help or h')
@@ -147,7 +193,7 @@ def main():
             # Explain options to user.
             print('Enter 0 to quit, 1 to add a previously visited destination and 2 to add a future destination.\n'
                   'Enter 3 to edit an already existing destination, 4 to view current destinations, and 5 to delete a'
-                  'destination.')
+                  'destination. Or enter 6 to search for destinations in an area and learn more about them.')
 
         elif task == '0':
             # User wants to exit program.
@@ -194,6 +240,10 @@ def main():
 
         elif task == '5':
             delete_destination(prior_destinations_list, future_destinations_list)
+
+        elif task == '6':
+            # Access microservice:
+            access_microservice()
 
         else:
             print('I am sorry, but there is no function for that button. Please enter "help" or "h" to see options.')
